@@ -2,6 +2,8 @@ import pygame
 from math import ceil
 import time
 
+# Feito por Magnus, Rudigus e Caius e Luanus
+
 placarJ1 = 0
 placarJ2 = 0
 
