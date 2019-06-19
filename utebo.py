@@ -1,15 +1,25 @@
 import pygame
 from math import ceil
+import time
 
 placarJ1 = 0
 placarJ2 = 0
 
-def main(): 
+def main():
+    global placarJ1
+    global placarJ2
     pygame.init()
-    largura = 1200
-    altura = 800
-    screen = pygame.display.set_mode((largura, altura))
-    done = False
+    p = False
+    o = True
+    infoTela = pygame.display.Info()
+    largura = infoTela.current_w
+    altura = infoTela.current_h
+    screen = pygame.display.set_mode((largura, altura), pygame.FULLSCREEN)
+    fontePlacar = pygame.font.SysFont("monospace", 60, 1)
+    textoPlacar = str(placarJ1)+ " x " + str(placarJ2)
+    placar = fontePlacar.render(textoPlacar, 0, (0, 0, 0))
+    pygame.display.set_caption("UTEBO - %d X %d" % (placarJ1, placarJ2))
+    done = True
     is_blue = True
     t=largura//2 # X do centro do círculo
     k=altura//2 # Y do centro do círculo
@@ -22,12 +32,12 @@ def main():
 
     clock = pygame.time.Clock()
 
-    while not done:
+    while done:
         for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                        done = True
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                        is_blue = not is_blue
+          if (event.type == pygame.QUIT):
+            done = False
+          if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            is_blue = not is_blue
         # Bola enconsta no lado esquerdo
         if(t - r < 0):
             if(not(t - r < 0 and k > altura//4 and k < 3 * altura//4)):
@@ -63,6 +73,8 @@ def main():
             distTY1 = (k - r) - (y[1] + tj)
         pressed = pygame.key.get_pressed()
         # Movimento dos Jogadores (J1 e J2)
+        if pressed[pygame.K_ESCAPE]:
+            done = False
         if pressed[pygame.K_UP]:
             if(not(distX <= tj and abs(y[0] - vel - y[1]) <= tj and y[0] > y[1]) and (not(y[0] <= 0))):
                 y[0] -= vel
@@ -92,6 +104,21 @@ def main():
         # Movimento da Bola pra Direita (J1)
         if(distTX<=0 and x[0]<t and distTY <= -4):
             t += velBola
+            if pressed[pygame.K_RCTRL]:
+##                clock = pygame.time.Clock()
+##                clock.tick()
+##                clock.tick()
+##                clock.get_time()
+                velchute = 0
+                tempo1 = int(time.time())
+                if(o):
+                    if(event.type == pygame.KEYUP and event.type == pygame.K_RCTRL):
+                        o = False
+                else:
+                    tempo2 = int(time.time())
+                    velchute = 16 + (tempo2 - tempo1)
+                    print(tempo2 - tempo1)
+                p = True
         # Movimento da Bola pra Esquerda (J1)
         if(distTX<=0 and x[0]>t and distTY <= -4):
             t -= velBola
@@ -115,20 +142,24 @@ def main():
             k -= velBola
         # Gol do J2
         if(t + r > largura and k > altura//4 and k < 3 * altura // 4):
-            print("GOL DO CAIO")
-            global placarJ2
-            placarJ2 += 1
+            print("GOL DO CAIO") # colocar isso no display, ou apagar
+            placarJ1 += 1
             return main()
         # Gol do J1
         if(t - r < 0 and k > altura//4 and k < 3 * altura // 4):
-            print("GOL DO MAGNUS")
-            global placarJ1
-            placarJ1 += 1
+            print("GOL DO MAGNUS") # colocar isso no display, ou apagar
+            placarJ2 += 1
             return main()
         # Ferramenta de Debug
         if pressed[pygame.K_o]:
             print("jogador 1: ", distTX, distTY, "jogador 2: ", distTX1, distTY1 , t , k)
         screen.fill((0, 0, 0))
+        if(p):
+            t += velchute
+            velchute -= 1
+            if(velchute<=0):
+                p = False
+                velchute = 0
         if is_blue:
             blue = (0, 0, 255)
             black = (0,0,0)
@@ -154,9 +185,11 @@ def main():
         pygame.draw.rect(screen, orange, pygame.Rect(x[1], y[1], tj, tj))
         # Bola
         pygame.draw.circle(screen, black, [t,k], r)
+        # Placar
+        screen.blit(placar, (largura//2 - 90, 60))
         
         pygame.display.flip()
         clock.tick(60)
 
 main()
-    
+pygame.quit()
