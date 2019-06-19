@@ -1,5 +1,6 @@
 import pygame
 from math import ceil
+from math import pi
 import time
 
 # Feito por Magnus, Rudigus e Caius e Luanus
@@ -11,14 +12,20 @@ def main():
     global placarJ1
     global placarJ2
     pygame.init()
+    tempo = 0
+    tempo1 = 0
+    tempoInicial = 0
+    tempoFinal = 0
     p = False
     o = True
+    chute = False
+    chuteAcabou = False
     infoTela = pygame.display.Info()
     largura = infoTela.current_w
     altura = infoTela.current_h
-    screen = pygame.display.set_mode((largura, altura), pygame.FULLSCREEN)
-    fontePlacar = pygame.font.SysFont("monospace", 60, 1)
-    textoPlacar = str(placarJ1)+ " x " + str(placarJ2)
+    screen = pygame.display.set_mode((800, 600))
+    fontePlacar = pygame.font.SysFont("monospace", 90, 1)
+    textoPlacar = str(placarJ1) + " " + str(placarJ2)
     placar = fontePlacar.render(textoPlacar, 0, (0, 0, 0))
     pygame.display.set_caption("UTEBO - %d X %d" % (placarJ1, placarJ2))
     done = True
@@ -36,10 +43,14 @@ def main():
 
     while done:
         for event in pygame.event.get():
-          if (event.type == pygame.QUIT):
-            done = False
-          if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-            is_blue = not is_blue
+            if (event.type == pygame.QUIT):
+                done = False
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                is_blue = not is_blue
+            if (event.type == pygame.KEYDOWN and event.key == pygame.K_p):
+                chute = True
+            if (event.type == pygame.KEYUP and event.key == pygame.K_p):
+                chuteAcabou = True
         # Bola enconsta no lado esquerdo
         if(t - r < 0):
             if(not(t - r < 0 and k > altura//4 and k < 3 * altura//4)):
@@ -113,34 +124,68 @@ def main():
 ##                clock.get_time()
                 velchute = 0
                 tempo1 = int(time.time())
-                if(o):
-                    if(event.type == pygame.KEYUP and event.type == pygame.K_RCTRL):
+                while(o):
+                    clock = pygame.time.Clock()
+                    clock.tick()
+                    if(not(event.type == pygame.KEYUP and event.type == pygame.K_RCTRL)):
                         o = False
+                    clock.tick()
+                    clock.get_time()
+                    velchute = 0
                 else:
-                    tempo2 = int(time.time())
-                    velchute = 16 + (tempo2 - tempo1)
+                    tempo2 = clock.get_time()
+                    velchute = 16 + tempo2
                     print(tempo2 - tempo1)
                 p = True
         # Movimento da Bola pra Esquerda (J1)
-        if(distTX<=0 and x[0]>t and distTY <= -4):
+        if(distTX<=0 and x[0]>t and distTY <= -(velBola)):
             t -= velBola
+##            if pressed[pygame.K_RCTRL]:
+####                clock = pygame.time.Clock()
+####                clock.tick()
+####                clock.tick()
+####                clock.get_time()
+##                velchute = 0
+##                clock = pygame.time.Clock()
+##                tempo = int(time.time())
+            if(chute):
+                tempoInicial = time.time()
+                print("EITAAA")
+                chute = False
+            if(chuteAcabou):
+                print("OITTTTEEE")
+                if(tempoFinal ==1):
+                    tempoFinal =0
+                    tempoInicial =0
+                    chuteAcabou = False
+                    velchute = 8
+                else:    
+                    tempoFinal = time.time()
+                    tempoPercorrido = int(tempoFinal - tempoInicial)
+                    print(tempoPercorrido)
+                    chuteAcabou = False
+                    velchute = 12 + 8*tempoPercorrido
+                p = True
+        elif(distTX>= 50):
+            tempoInicial = 0
+            tempoFinal = 1
         # Movimento da Bola pra Direita (J2)
-        if(distTX1<=0 and x[1]<t and distTY1 <= -4):
+        if(distTX1<=0 and x[1]<t and distTY1 <= -(velBola)):
             t += velBola
         # Movimento da Bola pra Esquerda (J2)
-        if(distTX1<=0 and x[1]>t and distTY1 <= -4):
+        if(distTX1<=0 and x[1]>t and distTY1 <= -(velBola)):
             t -= velBola
         # Movimento da Bola pra Baixo (J1)
-        if(distTY<=0 and y[0]<k and distTX <= -4):
+        if(distTY<=0 and y[0]<k and distTX <= -(velBola)):
             k += velBola
         # Movimento da Bola pra Cima (J1)
-        if(distTY<=0 and y[0]>k and distTX <= -4):
+        if(distTY<=0 and y[0]>k and distTX <= -(velBola)):
             k -= velBola
         # Movimento da Bola pra Baixo (J2)
-        if(distTY1 <= 0 and y[1]<k and distTX1 <= -4):
+        if(distTY1 <= 0 and y[1]<k and distTX1 <= -(velBola)):
             k += velBola
         # Movimento da Bola pra Cima (J2)
-        if(distTY1 <= 0 and y[1]>k and distTX1 <= -4):
+        if(distTY1 <= 0 and y[1]>k and distTX1 <= -(velBola)):
             k -= velBola
         # Gol do J2
         if(t + r > largura and k > altura//4 and k < 3 * altura // 4):
@@ -157,17 +202,25 @@ def main():
             print("jogador 1: ", distTX, distTY, "jogador 2: ", distTX1, distTY1 , t , k)
         screen.fill((0, 0, 0))
         if(p):
-            t += velchute
-            velchute -= 1
-            if(velchute<=0):
-                p = False
-                velchute = 0
+            if(x[0]<t):
+                t += velchute
+                velchute -= 1
+                if(velchute<=0):
+                    p = False
+                    velchute = 0
+            else:
+                t -= velchute
+                velchute -=1
+                if(velchute<=0):
+                    p = False
+                    velchute = 0
         if is_blue:
             blue = (0, 0, 255)
             black = (0,0,0)
             orange = (255, 100, 0)
             white = (255,255,255)
             darkGreen = (0,100,0)
+            cinza = (100, 100, 100)
         # Gramado
         pygame.draw.rect(screen,darkGreen,pygame.Rect(0,0,largura,altura))
         # Círcunferência Central
@@ -186,9 +239,10 @@ def main():
         pygame.draw.rect(screen, blue, pygame.Rect(x[0], y[0], tj, tj))
         pygame.draw.rect(screen, orange, pygame.Rect(x[1], y[1], tj, tj))
         # Bola
-        pygame.draw.circle(screen, black, [t,k], r)
+        pygame.draw.circle(screen, cinza, [t,k], r)
+        pygame.draw.circle(screen, cinza, [t,k], r)
         # Placar
-        screen.blit(placar, (largura//2 - 90, 60))
+        screen.blit(placar, (largura//2 - 80, 60))
         
         pygame.display.flip()
         clock.tick(60)
