@@ -45,8 +45,8 @@ def main():
     tj = 20 # Tamanho do Jogador
     x = [largura - largura//15 - tj, largura//15]
     y = [altura / 2 - tj//2 , altura / 2 - tj//2]
-    vel1 = 20
-    vel2 = 20
+    vel1 = 4
+    vel2 = 4
     multEnergia = 1.5
     r = 14
     tb = r * 2
