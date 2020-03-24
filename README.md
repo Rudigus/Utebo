@@ -17,3 +17,17 @@ Membros do grupo:
 Menção Honrosa:
 
 Matheus Asiático
+
+
+Palavras de Magnus:
+Esse trabalho foi sem dúvida o primeiro passo
+De muitos de nós para o mundo da programação
+Muitos de nós não tínhamos experiência nessa área
+E nesse trabalho pudemos praticar muitos conceitos
+Diferentes
+Como por exemplo o PairProgramming, Conceito e
+Físicas de jogos , mesmo que simples, frameworks
+E como elas facilitam nossa vida, e claro, muito
+Trabalho em equipe que futuramente ajudará muito mais
+A gente nessa área, Obg, espero que se divirta 
+Com esse joguinho feito com coração!
