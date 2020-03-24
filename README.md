@@ -16,8 +16,9 @@ Membros do grupo:
 
 Menção Honrosa:
 
-Matheus Asiático
+[Matheus Asiático](https://github.com/matheusb432)
 
+Jogo feito usando a biblioteca Pygame
 
 Palavras de Magnus:
 Esse trabalho foi sem dúvida o primeiro passo
