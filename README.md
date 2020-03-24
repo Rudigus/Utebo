@@ -18,7 +18,7 @@ Menção Honrosa:
 
 [Matheus Asiático](https://github.com/matheusb432)
 
-Jogo feito usando a biblioteca Pygame
+Jogo feito usando a biblioteca [Pygame](https://www.pygame.org/news)
 
 Palavras de Magnus:
 Esse trabalho foi sem dúvida o primeiro passo
