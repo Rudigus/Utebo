@@ -37,6 +37,18 @@ Finalmente, para compilar / rodar o jogo:
 python3 utebo.py
 ```
 
+### Windows
+O Python 3 será necessário para compilar o programa. Baixe o instalador em https://www.python.org/downloads/, que irá instalar tanto o python 3 como o pip.
+
+Além disso, o módulo pygame também será necessário. Para instalar o pygame, execute o seguinte comando:
+```shell
+pip install pygame
+```
+Finalmente, para compilar / rodar o jogo:
+```shell
+python utebo.py
+```
+
 ### Membros do grupo:
 
 [Luan Futebolista](https://github.com/jose-luan19)
